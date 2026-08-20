@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Flashcards</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .contador {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .card {
+            width: 100%;
+            height: 320px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.virado .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .frente,
+        .verso {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 25px;
+            background: white;
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .verso {
+            transform: rotateY(180deg);
+            background: #f1f1f1;
+        }
+
+        .instrucao {
+            margin: 15px;
+            font-size: 15px;
+        }
+
+        .botoes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            background: white;
+            color: #333;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .embaralhar {
+            background: #ffd166;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎴 Meus Flashcards</h1>
+
+        <div class="contador">
+            Cartão <span id="numero">1</span> de <span id="total"></span>
+        </div>
+
+        <div class="card" id="card" onclick="virarCard()">
+
+            <div class="card-inner">
+
+                <div class="frente" id="frente">
+                    Pergunta
+                </div>
+
+                <div class="verso" id="verso">
+                    Resposta
+                </div>
+
+            </div>
+
+        </div>
+
+        <p class="instrucao">
+            👆 Clique no cartão para ver a resposta
+        </p>
+
+        <div class="botoes">
+
+            <button onclick="anterior()">
+                ⬅️ Anterior
+            </button>
+
+            <button onclick="proximo()">
+                Próximo ➡️
+            </button>
+
+            <button class="embaralhar" onclick="embaralhar()">
+                🔀 Embaralhar
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const flashcards = [
+
+            {
+                pergunta: "O que é HTML?",
+                resposta: "É a linguagem usada para estruturar páginas da web."
+            },
+
+            {
+                pergunta: "O que significa CSS?",
+                resposta: "Cascading Style Sheets. É usado para estilizar páginas web."
+            },
+
+            {
+                pergunta: "Para que serve o JavaScript?",
+                resposta: "Para adicionar interatividade e comportamento às páginas."
+            },
+
+            {
+                pergunta: "O que é uma variável?",
+                resposta: "É um espaço usado para armazenar um valor que pode ser utilizado pelo programa."
+            },
+
+            {
+                pergunta: "O que é uma função?",
+                resposta: "É um bloco de código criado para executar uma determinada tarefa."
+            }
+
+        ];
+
+        let atual = 0;
+
+        const card = document.getElementById("card");
+        const frente = document.getElementById("frente");
+        const verso = document.getElementById("verso");
+        const numero = document.getElementById("numero");
+        const total = document.getElementById("total");
+
+        total.textContent = flashcards.length;
+
+        function mostrarCard() {
+
+            card.classList.remove("virado");
+
+            frente.textContent = flashcards[atual].pergunta;
+            verso.textContent = flashcards[atual].resposta;
+
+            numero.textContent = atual + 1;
+        }
+
+        function virarCard() {
+            card.classList.toggle("virado");
+        }
+
+        function proximo() {
+
+            atual++;
+
+            if (atual >= flashcards.length) {
+                atual = 0;
+            }
+
+            mostrarCard();
+        }
+
+        function anterior() {
+
+            atual--;
+
+            if (atual < 0) {
+                atual = flashcards.length - 1;
+            }
+
+            mostrarCard();
+        }
+
+        function embaralhar() {
+
+            flashcards.sort(() => Math.random() - 0.5);
+
+            atual = 0;
+
+            mostrarCard();
+        }
+
+        mostrarCard();
+
+    </script>
+
+</body>
+</html>
